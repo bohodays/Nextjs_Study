@@ -3,7 +3,7 @@ import style from "./index.module.css";
 import { ReactNode, useEffect } from "react";
 import books from "@/mock/books.json";
 import BookItem from "@/components/book-item";
-import { InferGetServerSidePropsType } from "next";
+import { InferGetServerSidePropsType, InferGetStaticPropsType } from "next";
 import fetchBooks from "@/lib/fetch-books";
 import fetchRandomBooks from "@/lib/fetch-random-books";
 
@@ -15,7 +15,22 @@ import fetchRandomBooks from "@/lib/fetch-random-books";
 // getServerSideProps 함수를 만들어주면 해당 페이지는 자동으로 SSR로 설정됨
 // getServerSideProps 함수 안에 console.log("서버사이드로 실행")을 작성하면 해당 console은 서버에서 실행되기 때문에 브라우저에서 출력되지 않음
 // 페이지 컴포넌트보다 먼저 실행되어서, 컴포넌트에 필요한 데이터를 불러오는 함수
-export const getServerSideProps = async () => {
+// export const getServerSideProps = async () => {
+//   const [allBooks, recoBooks] = await Promise.all([
+//     fetchBooks(),
+//     fetchRandomBooks(),
+//   ]);
+
+//   return {
+//     props: {
+//       allBooks,
+//       recoBooks,
+//     },
+//   };
+// };
+
+// SSG 방식
+export const getStaticProps = async () => {
   const [allBooks, recoBooks] = await Promise.all([
     fetchBooks(),
     fetchRandomBooks(),
@@ -33,7 +48,7 @@ export const getServerSideProps = async () => {
 export default function Home({
   allBooks,
   recoBooks,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetStaticPropsType<typeof getStaticProps>) {
   return (
     <div className={style.container}>
       <section>
