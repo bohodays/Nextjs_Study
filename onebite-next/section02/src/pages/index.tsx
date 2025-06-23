@@ -40,6 +40,8 @@ export const getStaticProps = async () => {
       allBooks,
       recoBooks,
     },
+    // ISR 방식을 위해 revalidate 적용
+    revalidate: 3,
   };
 };
 
