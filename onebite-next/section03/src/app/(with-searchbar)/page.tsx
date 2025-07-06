@@ -1,7 +1,20 @@
 import { BookData } from "@/types";
 import BookItem from "../components/book-item";
 import style from "./page.module.css";
-import books from "@/mock/books.json";
+
+/**
+ * 특정 페이지의 유형을 Static, Dynamic 페이지로 설정
+ * (권장하는 사용 옵션은 아님)
+ * 1. auto
+ *    - 기본값, 아무것도 강제하지 않음
+ * 2. force-dynamic
+ *    - 페이지를 강제로 Dynamic 페이지로 설정
+ * 3. force-static
+ *    - 페이지를 강제로 Static 페이지로 설정
+ * 4. error
+ *    - 페이지를 강제로 Static 페이지로 설정 (설정하면 안되는 이유가 있으면 빌드 오류 발생)
+ */
+export const dynamic = "force-dynamic";
 
 const AllBooks = async () => {
   const response = await fetch(
