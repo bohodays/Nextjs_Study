@@ -22,7 +22,8 @@ export const metadata: Metadata = {
 
 const Footer = async () => {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book`,
+    { cache: "force-cache" }
   );
   if (!response.ok) return <footer>제작 @bohodays</footer>;
 

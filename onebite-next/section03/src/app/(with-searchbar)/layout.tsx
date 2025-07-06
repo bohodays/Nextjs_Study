@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import Searchbar from "../components/searchbar";
 
 export default function Layout({
@@ -7,7 +8,11 @@ export default function Layout({
 }) {
   return (
     <div>
-      <Searchbar />
+      {/* Suspense 컴포넌트로 감싸게 되면 자식 컴포넌트들은 사전 렌더링 과정에서 제외되고 클라이언트 측에서만 렌더링되도록 함 */}
+      <Suspense fallback={<div>Loading ...</div>}>
+        <Searchbar />
+      </Suspense>
+
       {children}
     </div>
   );
