@@ -1,18 +1,13 @@
 import BookItem from "@/app/components/book-item";
 import { BookData } from "@/types";
 import delay from "@/util/delay";
+import { Suspense } from "react";
 
-export default async function Page({
-  searchParams,
-}: {
-  searchParams: Promise<{ q?: string }>;
-}) {
+async function SearchResult({ q }: { q: string }) {
   // 스트리밍을 확인하기 위한 임시 코드
   // await delay(1500);
 
   // Search 페이지는 searchParams와 같은 동적 함수로 의존하기 때문에 static 페이지로 설정할 수 없음
-  const { q } = await searchParams;
-
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/search?q=${q}`,
     // 데이터를 캐싱하는 방향으로 최적화 선택
@@ -28,5 +23,17 @@ export default async function Page({
         <BookItem key={book.id} {...book} />
       ))}
     </div>
+  );
+}
+
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { q?: string };
+}) {
+  return (
+    <Suspense key={searchParams.q ?? ""} fallback={<div>Loading ...</div>}>
+      <SearchResult q={searchParams.q ?? ""} />
+    </Suspense>
   );
 }
