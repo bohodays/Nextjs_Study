@@ -3,6 +3,8 @@ import BookItem from "../components/book-item";
 import style from "./page.module.css";
 import { Suspense } from "react";
 import delay from "@/util/delay";
+import BookItemSkeleton from "../components/skeleton/book-item-skeleton";
+import BookListSkeleton from "../components/skeleton/book-list-skeleton";
 
 /**
  * 특정 페이지의 유형을 Static, Dynamic 페이지로 설정
@@ -69,13 +71,13 @@ export default function Home() {
     <div className={style.container}>
       <section>
         <h3>지금 추천하는 도서</h3>
-        <Suspense fallback={<div>도서를 불러오는 중입니다 ...</div>}>
+        <Suspense fallback={<BookListSkeleton count={3} />}>
           <RecoBooks />
         </Suspense>
       </section>
       <section>
         <h3>등록된 모든 도서</h3>
-        <Suspense fallback={<div>도서를 불러오는 중입니다 ...</div>}>
+        <Suspense fallback={<BookListSkeleton count={10} />}>
           <AllBooks />
         </Suspense>
       </section>
