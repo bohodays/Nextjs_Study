@@ -1,17 +1,22 @@
 "use server";
 
+import delay from "@/util/delay";
 import { revalidatePath } from "next/cache";
 
-export async function createReviewAction(formData: FormData) {
+export async function createReviewAction(_: any, formData: FormData) {
   const bookId = formData.get("bookId")?.toString();
   const content = formData.get("content")?.toString();
   const author = formData.get("author")?.toString();
 
   if (!bookId || !content || !author) {
-    return;
+    return {
+      status: false,
+      error: "리뷰 내용과 작성자를 입력해주세요",
+    };
   }
 
   try {
+    await delay(2000);
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_SERVER_URL}/review`,
       {
@@ -23,6 +28,10 @@ export async function createReviewAction(formData: FormData) {
         }),
       }
     );
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
 
     // 주의할 점
     // 1. revalidatePath 메서드는 오직 서버 측에서만 호출할 수 있음
@@ -44,7 +53,16 @@ export async function createReviewAction(formData: FormData) {
     //   { next: { tags: ['review-bookId'] } }
     // );
     revalidatePath(`/book/${bookId}`); // 재검증 (서버 액션 후 넥스트 서버에 페이지 다시 생성 요청)
+
+    return {
+      status: true,
+      error: "",
+    };
   } catch (e) {
     console.error(e);
+    return {
+      status: false,
+      error: `리뷰 저장에 실패했습니다 : ${e}`,
+    };
   }
 }
