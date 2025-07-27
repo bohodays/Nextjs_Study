@@ -74,6 +74,34 @@ async function ReviewList({ bookId }: { bookId: string }) {
   );
 }
 
+// 현재 페이지 메타 데이터를 동적으로 생성하는 역할을 함
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id?: string }>;
+}) {
+  const { id } = await params;
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_SERVER_URL}/book/${id}`
+  );
+
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  const book: BookData = await response.json();
+
+  return {
+    title: `${book.title} - 한입북스`,
+    description: `${book.description}`,
+    openGraph: {
+      title: `${book.title} - 한입북스`,
+      description: `${book.description}`,
+      images: [book.coverImgUrl],
+    },
+  };
+}
+
 export default async function Page({ params }: { params: { id: string } }) {
   return (
     <div className={style.container}>
